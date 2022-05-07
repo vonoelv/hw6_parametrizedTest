@@ -16,6 +16,7 @@ import java.util.stream.Stream;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.WebDriverConditions.url;
 
 
 @DisplayName("Parametrized tests")
@@ -67,7 +68,7 @@ public class ParametrizedTests {
                 .parent().parent().parent()
                 .$(byText("Узнать подробнее")).click();
 
-        waitForMatchingUrl(Pattern.quote(url));
+        webdriver().shouldHave(url(url));
     }
 
 
