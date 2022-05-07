@@ -10,7 +10,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.*;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static com.codeborne.selenide.Condition.text;
@@ -43,11 +42,9 @@ public class ParametrizedTests {
             "0000000000000000"})
     @DisplayName("Login: Error message for invalid phone number(ValueSource)")
     @ParameterizedTest(name = "Login: Error message for invalid phone number: {0}")
-    void test1(String testData) {
+    void test1(String phoneNumber) {
         open("/login/");
-
-        $("#phoneNumber").setValue(testData).pressEnter();
-
+        $("#phoneNumber").setValue(phoneNumber).pressEnter();
         $("#formError").shouldHave(text("Некорректный номер телефона"));
     }
 
@@ -57,17 +54,14 @@ public class ParametrizedTests {
             "Страхование для туристов | https://www.tinkoff.ru/insurance/travel/?internal_source=control",
             "Страхование квартиры и дома | https://www.tinkoff.ru/insurance/property/?internal_source=control",
             "Страхование от несчастных случаев | https://www.tinkoff.ru/insurance/health/?internal_source=control"
-    },
-            delimiter = '|')
+    }, delimiter = '|')
     @DisplayName("Insurance: Ability to open info page for an insurance type(CsvSource)")
     @ParameterizedTest(name = "Insurance: Ability to open info page for an insurance type: \"{0}\": \"{1}\"")
     void checkInfoForInsuranceType(String insuranceType, String url) {
         open("/insurance/");
-
         $$("[data-test='htmlTag title']").findBy(text(insuranceType))
                 .parent().parent().parent()
                 .$(byText("Узнать подробнее")).click();
-
         webdriver().shouldHave(url(url));
     }
 
@@ -84,11 +78,9 @@ public class ParametrizedTests {
     @ParameterizedTest(name = "Open invest account: Error messages for invalid name: \"{0}\":  \"{1}\"")
     void checkFioErrorMessages(String fioInput, String error) {
         open("/invest/");
-
         $("[data-qa-file='InputBox']").scrollTo().click();
         $("[data-qa-type='uikit/inputFio.value.input']").scrollTo().setValue(fioInput).pressEscape();
         $(byText("Мобильный телефон")).parent().click();
-
         $("[data-qa-type='uikit/formRow.errorBlock']").shouldHave(text(error));
     }
 
@@ -98,9 +90,7 @@ public class ParametrizedTests {
     @ParameterizedTest(name = "Corresponding URL is open by click on a header menu item: \"{0}\"")
     void checkHeaderMenuItems(HeaderMenuItem headerMenuItem) {
         open("/");
-
         $("[data-qa-type='uikit/navigation.menu']").$(byText(headerMenuItem.name)).click();
-
         waitForMatchingUrl(headerMenuItem.url);
     }
 
